@@ -4,7 +4,7 @@ let async = require('async');
 
 export default class CategoryController {
   getAll(req, res, next) {
-    Categories.find({}).populate('items').exec((err, categories)=> {
+    Categories.find((err, categories)=> {
       if (err) {
         next(err);
       }
@@ -14,7 +14,7 @@ export default class CategoryController {
 
   getCategory(req, res, next) {
     const _id = req.params.id;
-    Categories.findOne({_id}).populate('items').exec((err, category)=> {
+    Categories.findOne({_id},(err, category)=> {
       if (err) {
         next(err);
       }

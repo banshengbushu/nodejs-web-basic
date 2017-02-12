@@ -6,7 +6,11 @@ let Schema = mongoose.Schema;
 let itemSchema = new Schema({
   name: String,
   price: String,
-},{
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'Category'
+  }
+}, {
   versionKey: false
 });
 

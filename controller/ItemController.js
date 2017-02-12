@@ -2,7 +2,7 @@ let Items = require("../model/item");
 
 export default class ItemController {
   getAll(req, res, next) {
-    Items.find({}, (err, items)=> {
+    Items.find({}).populate('category').exec((err, items)=> {
       if (err) {
         next(err);
       }
@@ -13,7 +13,7 @@ export default class ItemController {
   getItem(req, res, next) {
     const _id = req.params.id;
 
-    Items.findOne({_id}, (err, item)=> {
+    Items.findOne({_id}).populate('category').exec((err, item)=> {
       if (err) {
         next(err)
       }

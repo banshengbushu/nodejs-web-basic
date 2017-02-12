@@ -2,10 +2,13 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let cartSchema = new Schema({
-  id: Number,
+  userId: String,
   items: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Item'
+    count: Number,
+    item: {
+      type: Schema.Types.ObjectId,
+      ref: 'Item'
+    }
   }]
 }, {
   versionKey: false

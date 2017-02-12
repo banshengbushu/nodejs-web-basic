@@ -4,11 +4,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
-  name: String,
-  items: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Item'
-  }]
+  name: String
 }, {
   versionKey: false
 });
