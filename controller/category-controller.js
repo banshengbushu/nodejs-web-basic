@@ -57,33 +57,5 @@ class CategoryController {
 
     });
   }
-
-  addItem(req, res, next) {
-    let name = req.body.name;
-    let price = req.body.price;
-    let id = req.params.id;
-
-    async.waterfall([
-      (done)=> {
-        Items.create({name, price}, (err, item) => {
-          done(err, item);
-        });
-      },
-      (done, data)=> {
-        Categories.findOne({id}, (err, category)=> {
-          if (err) {
-            done(err);
-          }
-          category.items.push(data._id);
-          category.save(done);
-        })
-      }
-    ], (err)=> {
-      if (err) {
-        next(err)
-      }
-      res.sendStatus(201);
-    });
-  }
 }
 module.exports = CategoryController;

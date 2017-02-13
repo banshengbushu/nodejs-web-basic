@@ -54,33 +54,5 @@ class CartController {
       res.sendStatus(204);
     })
   }
-
-  addItem(req, res, next) {
-    let name = req.body.name;
-    let price = req.body.price;
-    let id = req.params.id;
-
-    async.waterfall([
-      (done)=> {
-        Items.create({name, price}, (err, item) => {
-          done(err, item);
-        });
-      },
-      (done, data)=> {
-        Carts.findOne({id}, (err, cart)=> {
-          if (err) {
-            done(err, cart);
-          }
-          cart.items.push(data._id);
-          cart.save(done);
-        })
-      }
-    ], (err)=> {
-      if (err) {
-        next(err)
-      }
-      res.sendStatus(201);
-    });
-  }
 }
 module.exports = CartController;
