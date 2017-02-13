@@ -1,8 +1,8 @@
-let Carts = require('../model/cart');
-let Items = require('../model/item');
-let async = require('async');
+const Carts = require('../model/cart');
+const Items = require('../model/item');
+const async = require('async');
 
-export default class CartController {
+class CartController {
   getAll(req, res, next) {
     Carts.find({}).populate('items').exec((err, carts)=> {
       if (err) {
@@ -82,27 +82,5 @@ export default class CartController {
       res.sendStatus(201);
     });
   }
-
-  removeItem(req, res, next) {
-    const _id = req.params.id;
-    const itemId = req.params.item_id;
-
-    async.waterfall([
-      (done)=> {
-        Carts.findOne({_id}, (err, cart)=> {
-          done(err, cart);
-        })
-      },
-      (done, data)=> {
-        const index = data.items.indexOf(itemId);
-        data.items.splice(index, 1);
-        data.save(done)
-      }
-    ], (err)=> {
-      if (err) {
-        next(err)
-      }
-      res.sendStatus(204);
-    });
-  }
 }
+module.exports = CartController;

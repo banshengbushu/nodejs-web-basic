@@ -1,8 +1,8 @@
-let Categories = require('../model/category');
-let Items = require('../model/item');
-let async = require('async');
+const Categories = require('../model/category');
+const Items = require('../model/item');
+const async = require('async');
 
-export default class CategoryController {
+class CategoryController {
   getAll(req, res, next) {
     Categories.find((err, categories)=> {
       if (err) {
@@ -14,7 +14,7 @@ export default class CategoryController {
 
   getCategory(req, res, next) {
     const _id = req.params.id;
-    Categories.findOne({_id},(err, category)=> {
+    Categories.findOne({_id}, (err, category)=> {
       if (err) {
         next(err);
       }
@@ -85,28 +85,5 @@ export default class CategoryController {
       res.sendStatus(201);
     });
   }
-
-  removeItem(req, res, next) {
-    const _id = req.params.id;
-    const itemId = req.params.item_id;
-
-    async.waterfall([
-      (done)=> {
-        Categories.findOne({_id}, (err, category)=> {
-          done(err, category);
-        })
-      },
-      (done, data)=> {
-        const index = data.items.indexOf(itemId);
-        data.items.splice(index, 1);
-        data.save(done)
-      }
-    ], (err)=> {
-      if (err) {
-        next(err)
-      }
-      res.sendStatus(204);
-    });
-  }
-
 }
+module.exports = CategoryController;

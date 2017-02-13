@@ -1,6 +1,6 @@
-let Items = require("../model/item");
+const Items = require("../model/item");
 
-export default class ItemController {
+class ItemController {
   getAll(req, res, next) {
     Items.find({}).populate('category').exec((err, items)=> {
       if (err) {
@@ -54,3 +54,4 @@ export default class ItemController {
     })
   }
 }
+module.exports = ItemController;

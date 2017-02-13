@@ -1,9 +1,9 @@
 'use strict';
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-let itemSchema = new Schema({
+const itemSchema = new Schema({
   name: String,
   price: String,
   category: {

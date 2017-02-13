@@ -1,7 +1,7 @@
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-let cartSchema = new Schema({
+const cartSchema = new Schema({
   userId: String,
   items: [{
     count: Number,
