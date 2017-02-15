@@ -31,7 +31,7 @@ module.exports = {
   ],
   Cart: [{
     "_id": "5885853fa0c60678c411be5d",
-    "userId": 1,
+    "userId": '1',
     "items": [
       {
         "_id": "58878544084b4b0761a2c7aa",
