@@ -1,6 +1,6 @@
 const Carts = require('../model/cart');
-const Items = require('../model/item');
 const async = require('async');
+const httpCode = require('../config/httpCode');
 
 class CartController {
   getAll(req, res, next) {
@@ -8,50 +8,61 @@ class CartController {
       if (err) {
         next(err);
       }
-      res.send(carts);
+      const totalCount = carts.length;
+      res.status(httpCode.OK).send({carts, totalCount});
     });
   }
 
-  getCart(req, res, next) {
+  getOne(req, res, next) {
     const _id = req.params.id;
 
     Carts.findOne({_id}).populate('items').exec((err, cart)=> {
       if (err) {
         next(err)
       }
-      res.send(cart);
+      if (!cart) {
+        res.status(httpCode.NOT_FOUND);
+      }
+      res.status(httpCode.OK).send(cart);
     })
   }
 
-  addCart(req, res, next) {
+  create(req, res, next) {
     const id = req.body.id;
     Carts.create({id}, (err)=> {
       if (err) {
         next(err);
       }
-      res.sendStatus(201);
+      res.sendStatus(httpCode.CREATED);
     })
   }
 
-  removeCart(req, res, next) {
+  delete(req, res, next) {
     const _id = req.params.id;
 
-    Carts.findOneAndRemove({_id}, (err)=> {
+    Carts.findOneAndRemove({_id}, (err, cart)=> {
       if (err) {
         next(err);
       }
-      res.sendStatus(204);
+      if (!cart) {
+        res.sendStatus(httpCode.NOT_FOUND);
+      }
+      res.sendStatus(httpCode.NO_CONTENT);
     })
   }
 
-  updateCart(req, res, next) {
+  update(req, res, next) {
     const _id = req.params.id;
     const cart = {id: req.body.id};
-    Carts.update({_id}, cart, (err)=> {
+    Carts.update({_id}, cart, (err, cart)=> {
       if (err) {
         next(err);
       }
-      res.sendStatus(204);
+      if (!cart) {
+        res.sendStatus(httpCode.NOT_FOUND);
+      }
+
+      res.sendStatus(httpCode.NO_CONTENT);
     })
   }
 }

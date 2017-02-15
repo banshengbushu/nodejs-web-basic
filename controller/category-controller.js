@@ -1,6 +1,5 @@
 const Categories = require('../model/category');
-const Items = require('../model/item');
-const async = require('async');
+const httpCode = require('../config/httpCode');
 
 class CategoryController {
   getAll(req, res, next) {
@@ -8,52 +7,63 @@ class CategoryController {
       if (err) {
         next(err);
       }
-      res.send(categories);
+      const totalCount = categories.length;
+      res.status(httpCode.OK).send({categories, totalCount});
     })
   }
 
-  getCategory(req, res, next) {
+  getOne(req, res, next) {
     const _id = req.params.id;
     Categories.findOne({_id}, (err, category)=> {
       if (err) {
         next(err);
       }
-      res.send(category);
+      if (!category) {
+        res.status(httpCode.NOT_FOUND);
+      }
+      res.status(httpCode.OK).send(category);
     });
   }
 
-  addCategory(req, res, next) {
+  create(req, res, next) {
     const name = req.body.name;
     Categories.create({name}, (err)=> {
       if (err) {
         next(err);
       }
-      res.send(201);
+      res.sendStatus(httpCode.CREATED);
     })
   }
 
 
-  removeCategory(req, res, next) {
+  delete(req, res, next) {
     const _id = req.params.id;
 
-    Categories.findOneAndRemove({_id}, (err)=> {
+    Categories.findOneAndRemove({_id}, (err, category)=> {
       if (err) {
         next(err);
       }
-      res.sendStatus(204);
+      if (!category) {
+        res.sendStatus(httpCode.NOT_FOUND);
+      }
+      res.sendStatus(httpCode.NO_CONTENT);
     })
 
   }
 
-  updateCategory(req, res, next) {
+  update(req, res, next) {
     const _id = req.params.id;
     const name = {name: req.body.name};
 
-    Categories.update({_id}, name, (err)=> {
+    Categories.update({_id}, name, (err, category)=> {
       if (err) {
         next(err);
       }
-      res.sendStatus(204);
+      if (!category) {
+        res.sendStatus(httpCode.NOT_FOUND);
+      }
+
+      res.sendStatus(httpCode.NO_CONTENT);
 
     });
   }
