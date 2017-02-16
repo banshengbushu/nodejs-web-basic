@@ -7,15 +7,16 @@ class ItemController {
       if (err) {
         next(err);
       }
-      const totalCount = items.length;
-      res.status(httpCode.OK).send({items, totalCount});
+      Items.count({}, (err, totalCount)=> {
+        res.status(httpCode.OK).send({items, totalCount});
+      });
     })
   }
 
   getOne(req, res, next) {
     const _id = req.params.id;
 
-    Items.findOne({_id}).populate('category').exec((err, item)=> {
+    Items.findById(_id).populate('category').exec((err, item)=> {
       if (err) {
         next(err)
       }
@@ -27,10 +28,8 @@ class ItemController {
   }
 
   create(req, res, next) {
-    const name = req.body.name;
-    const price = req.body.price;
 
-    Items.create({name, price}, (err)=> {
+    Items.create(req.body, (err)=> {
       if (err) {
         next(err);
       }
@@ -41,7 +40,7 @@ class ItemController {
   delete(req, res, next) {
     const _id = req.params.id;
 
-    Items.findOneAndRemove({_id}, (err, item)=> {
+    Items.findByIdAndRemove(_id, (err, item)=> {
       if (err) {
         next(err);
       }
@@ -54,8 +53,7 @@ class ItemController {
 
   update(req, res, next) {
     const _id = req.params.id;
-    const item = {name: req.body.name, price: req.body.price};
-    Items.update({_id}, item, (err, item)=> {
+    Items.findByIdAndUpdate(_id, req.body, (err, item)=> {
       if (err) {
         next(err);
       }

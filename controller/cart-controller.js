@@ -8,15 +8,16 @@ class CartController {
       if (err) {
         next(err);
       }
-      const totalCount = carts.length;
-      res.status(httpCode.OK).send({carts, totalCount});
-    });
+      Carts.count({}, (err, totalCount)=> {
+        res.status(httpCode.OK).send({carts, totalCount});
+      });
+    })
   }
 
   getOne(req, res, next) {
     const _id = req.params.id;
 
-    Carts.findOne({_id}).populate('items').exec((err, cart)=> {
+    Carts.findById({_id}).populate('items').exec((err, cart)=> {
       if (err) {
         next(err)
       }
@@ -28,8 +29,7 @@ class CartController {
   }
 
   create(req, res, next) {
-    const id = req.body.id;
-    Carts.create({id}, (err)=> {
+    Carts.create(req.body, (err)=> {
       if (err) {
         next(err);
       }
@@ -40,7 +40,7 @@ class CartController {
   delete(req, res, next) {
     const _id = req.params.id;
 
-    Carts.findOneAndRemove({_id}, (err, cart)=> {
+    Carts.findByIdAndRemove({_id}, (err, cart)=> {
       if (err) {
         next(err);
       }
@@ -53,15 +53,14 @@ class CartController {
 
   update(req, res, next) {
     const _id = req.params.id;
-    const cart = {id: req.body.id};
-    Carts.update({_id}, cart, (err, cart)=> {
+
+    Carts.findByIdAndUpdate(_id, req.body, (err, cart)=> {
       if (err) {
         next(err);
       }
       if (!cart) {
         res.sendStatus(httpCode.NOT_FOUND);
       }
-
       res.sendStatus(httpCode.NO_CONTENT);
     })
   }

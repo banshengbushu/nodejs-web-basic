@@ -7,14 +7,15 @@ class CategoryController {
       if (err) {
         next(err);
       }
-      const totalCount = categories.length;
-      res.status(httpCode.OK).send({categories, totalCount});
+      Categories.count({}, (err, totalCount)=> {
+        res.status(httpCode.OK).send({categories, totalCount});
+      });
     })
   }
 
   getOne(req, res, next) {
     const _id = req.params.id;
-    Categories.findOne({_id}, (err, category)=> {
+    Categories.findById(_id, (err, category)=> {
       if (err) {
         next(err);
       }
@@ -26,8 +27,7 @@ class CategoryController {
   }
 
   create(req, res, next) {
-    const name = req.body.name;
-    Categories.create({name}, (err)=> {
+    Categories.create(req.body, (err)=> {
       if (err) {
         next(err);
       }
@@ -39,7 +39,7 @@ class CategoryController {
   delete(req, res, next) {
     const _id = req.params.id;
 
-    Categories.findOneAndRemove({_id}, (err, category)=> {
+    Categories.findByIdAndRemove(_id, (err, category)=> {
       if (err) {
         next(err);
       }
@@ -53,9 +53,8 @@ class CategoryController {
 
   update(req, res, next) {
     const _id = req.params.id;
-    const name = {name: req.body.name};
 
-    Categories.update({_id}, name, (err, category)=> {
+    Categories.findByIdAndUpdate(_id, req.body, (err, category)=> {
       if (err) {
         next(err);
       }
