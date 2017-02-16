@@ -4,9 +4,9 @@ const request = supertest(app);
 require('should');
 
 describe('CategoryController', ()=> {
-  it('GET /categories should return all categories', ()=> {
+  it('GET /categories should return all categories', (done)=> {
     request
-      .get('/category')
+      .get('/categories')
       .expect(200)
       .expect((res)=> {
         res.body.totalCount.should.equal(2);
@@ -14,46 +14,50 @@ describe('CategoryController', ()=> {
       .end(done);
   });
 
-  it('GET /categories/:categoryId should return one category', ()=> {
+  it('GET /categories/:categoryId should return one category', (done)=> {
+    const categoryId = '588386e7807d6197b013db17';
     request
-      .get('categories/588386e7807d6197b013db17')
+      .get(`/categories/${categoryId}`)
       .expect(200)
       .expect((res)=> {
-        res.body.should.equal({
+        res.body.should.eql({
+          "_id": "588386e7807d6197b013db17",
           "name": "vegetables"
-        },)
-          .end(done);
-      });
+        })
+      })
+      .end(done);
   });
 
 
-  it('POST /categories should return 201', ()=> {
+  it('POST /categories should return 201', (done)=> {
     const category = {
       "name": "fruit"
     };
 
     request
-      .post('categories')
+      .post('/categories')
       .send(category)
       .expect(201)
       .end(done);
   });
 
-  it('DELETE /categories/:categoryId should return 204', ()=> {
+  it('PUT /categories/:categoryId should return 204', (done)=> {
+    const category = {
+      "name": "fruit"
+    };
+    const categoryId = '58838a2faed8733e1ff7288d';
     request
-      .delete('/categories/588386e7807d6197b013db17')
+      .put(`/categories/${categoryId}`)
+      .send(category)
       .expect(204)
       .end(done);
   });
 
-  it('PUT /categories/:categoryId should return 204', ()=> {
-    const category = {
-      "name": "fruit"
-    };
+  it('DELETE /categories/:categoryId should return 204', (done)=> {
+    const categoryId = '588386e7807d6197b013db17';
     request
-      .put('/categories/58838a2faed8733e1ff7288d')
-      .send(category)
+      .delete(`/categories/${categoryId}`)
       .expect(204)
       .end(done);
-  })
+  });
 });

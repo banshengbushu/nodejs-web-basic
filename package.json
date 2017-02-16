@@ -6,7 +6,7 @@
   "scripts": {
     "babel-node": "babel-node",
     "start": "nodemon --exec npm run babel-node -- app.js",
-    "test": "mocha --compilers js spec/",
+    "test": "mocha --recursive spec/",
     "refreshMongo": "babel-node  ./tool/mongo-tool.js"
   },
   "author": "",
@@ -24,6 +24,7 @@
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
     "nodemon": "^1.11.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "recursive": "0.0.2"
   }
 }

@@ -5,25 +5,25 @@ class ItemController {
   getAll(req, res, next) {
     Items.find({}).populate('category').exec((err, items)=> {
       if (err) {
-        next(err);
+        return next(err);
       }
       Items.count({}, (err, totalCount)=> {
-        res.status(httpCode.OK).send({items, totalCount});
+        return res.status(httpCode.OK).send({items, totalCount});
       });
     })
   }
 
   getOne(req, res, next) {
-    const _id = req.params.id;
+    const _id = req.params.itemId;
 
     Items.findById(_id).populate('category').exec((err, item)=> {
       if (err) {
-        next(err)
+        return next(err)
       }
       if (!item) {
-        res.status(httpCode.NOT_FOUND);
+        return res.status(httpCode.NOT_FOUND);
       }
-      res.status(httpCode.OK).send(item);
+      return res.status(httpCode.OK).send(item);
     })
   }
 
@@ -31,37 +31,37 @@ class ItemController {
 
     Items.create(req.body, (err)=> {
       if (err) {
-        next(err);
+        return next(err);
       }
-      res.sendStatus(httpCode.CREATED);
+      return res.sendStatus(httpCode.CREATED);
     })
   }
 
   delete(req, res, next) {
-    const _id = req.params.id;
+    const _id = req.params.itemId;
 
     Items.findByIdAndRemove(_id, (err, item)=> {
       if (err) {
-        next(err);
+        return next(err);
       }
       if (!item) {
-        res.sendStatus(httpCode.NOT_FOUND);
+        return res.sendStatus(httpCode.NOT_FOUND);
       }
-      res.sendStatus(httpCode.NO_CONTENT);
+      return res.sendStatus(httpCode.NO_CONTENT);
     })
   }
 
   update(req, res, next) {
-    const _id = req.params.id;
+    const _id = req.params.itemId;
     Items.findByIdAndUpdate(_id, req.body, (err, item)=> {
       if (err) {
-        next(err);
+        return next(err);
       }
       if (!item) {
-        res.sendStatus(httpCode.NOT_FOUND);
+        return res.sendStatus(httpCode.NOT_FOUND);
       }
 
-      res.sendStatus(httpCode.NO_CONTENT);
+      return res.sendStatus(httpCode.NO_CONTENT);
     })
   }
 }
