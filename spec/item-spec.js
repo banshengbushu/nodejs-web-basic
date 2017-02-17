@@ -21,10 +21,12 @@ describe('ItemController', ()=> {
       .expect(200)
       .expect((res)=> {
         res.body.should.eql({
+          __v: 0,
           _id: "5887855b084b4b0761a2c7ab",
           name: "orange",
           price: "3元",
           category: {
+            __v: 0,
             _id: "58838a2faed8733e1ff7288d",
             name: "fruit"
           }

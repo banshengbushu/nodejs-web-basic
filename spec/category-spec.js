@@ -21,6 +21,7 @@ describe('CategoryController', ()=> {
       .expect(200)
       .expect((res)=> {
         res.body.should.eql({
+          "__v": 0,
           "_id": "588386e7807d6197b013db17",
           "name": "vegetables"
         })

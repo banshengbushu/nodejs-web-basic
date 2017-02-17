@@ -21,6 +21,7 @@ describe('CartController', ()=> {
       .expect(200)
       .expect((res)=> {
         res.body.should.eql({
+            __v: 0,
             _id: '5885853fa0c60678c411be5d',
             userId: '1',
             items: [{

@@ -10,8 +10,6 @@ const cartSchema = new Schema({
       ref: 'Item'
     }
   }]
-}, {
-  versionKey: false
 });
 
 module.exports = mongoose.model("Cart", cartSchema);

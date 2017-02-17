@@ -5,8 +5,6 @@ const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
   name: String
-}, {
-  versionKey: false
 });
 
 module.exports = mongoose.model("Category", categorySchema);
