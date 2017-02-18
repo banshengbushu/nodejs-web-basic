@@ -4,14 +4,20 @@ const httpCode = require('../config/httpCode');
 
 class CartController {
   getAll(req, res, next) {
-    Carts.find({}).populate('items').exec((err, carts)=> {
+    async.series({
+      items: (done)=> {
+        Carts.find({}).populate('items').exec(done)
+      },
+      totalCount: (done)=> {
+        Carts.count(done);
+      }
+
+    }, (err, result)=> {
       if (err) {
         return next(err);
       }
-      Carts.count({}, (err, totalCount)=> {
-        return res.status(httpCode.OK).send({carts, totalCount});
-      });
-    })
+      return res.status(httpCode.OK).send(result);
+    });
   }
 
   getOne(req, res, next) {

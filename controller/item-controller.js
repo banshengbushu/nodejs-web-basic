@@ -1,16 +1,22 @@
 const Items = require("../model/item");
 const httpCode = require('../config/httpCode');
+const async = require('async');
 
 class ItemController {
   getAll(req, res, next) {
-    Items.find({}).populate('category').exec((err, items)=> {
+    async.series({
+      items: (done)=> {
+        Items.find({}).populate('category').exec(done);
+      },
+      totalCount: (done)=> {
+        Items.count(done);
+      },
+    }, (err, result)=> {
       if (err) {
         return next(err);
       }
-      Items.count({}, (err, totalCount)=> {
-        return res.status(httpCode.OK).send({items, totalCount});
-      });
-    })
+      return res.status(httpCode.OK).send(result);
+    });
   }
 
   getOne(req, res, next) {

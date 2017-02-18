@@ -5,14 +5,21 @@ const async = require('async');
 
 class CategoryController {
   getAll(req, res, next) {
-    Categories.find((err, categories)=> {
+    async.series({
+      items: (done)=> {
+        Categories.find({}, done);
+      },
+      totalCount: (done)=> {
+        Categories.count(done);
+      }
+
+    }, (err, result)=> {
       if (err) {
         return next(err);
       }
-      Categories.count({}, (err, totalCount)=> {
-        return res.status(httpCode.OK).send({categories, totalCount});
-      });
-    })
+
+      return res.status(httpCode.OK).send(result);
+    });
   }
 
   getOne(req, res, next) {
