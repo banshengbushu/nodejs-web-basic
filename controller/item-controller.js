@@ -34,12 +34,11 @@ class ItemController {
   }
 
   create(req, res, next) {
-
-    Items.create(req.body, (err)=> {
+    Items.create(req.body, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      return res.sendStatus(httpCode.CREATED);
+      return res.status(httpCode.CREATED).send({uri: `items/${doc._id}`});
     })
   }
 

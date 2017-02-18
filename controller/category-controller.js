@@ -36,11 +36,11 @@ class CategoryController {
   }
 
   create(req, res, next) {
-    Categories.create(req.body, (err)=> {
+    Categories.create(req.body, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      return res.sendStatus(httpCode.CREATED);
+      return res.status(httpCode.CREATED).send({uri: `categories/${doc._id}`});
     })
   }
 
