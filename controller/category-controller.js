@@ -1,7 +1,8 @@
+const async = require('async');
 const Categories = require('../model/category');
 const Item = require('../model/item');
 const httpCode = require('../config/httpCode');
-const async = require('async');
+
 
 class CategoryController {
   getAll(req, res, next) {
@@ -23,15 +24,15 @@ class CategoryController {
   }
 
   getOne(req, res, next) {
-    const _id = req.params.categoryId;
-    Categories.findById(_id, (err, category)=> {
+    const categoryId = req.params.categoryId;
+    Categories.findById(category, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      if (!category) {
+      if (!doc) {
         return res.status(httpCode.NOT_FOUND);
       }
-      return res.status(httpCode.OK).send(category);
+      return res.status(httpCode.OK).send(doc);
     });
   }
 
@@ -45,21 +46,21 @@ class CategoryController {
   }
 
   delete(req, res, next) {
-    const _id = req.params.categoryId;
+    const category = req.params.categoryId;
 
     async.waterfall([
       (done)=> {
-        Item.findById(_id, done);
+        Item.findOne({category}, done);
       },
       (docs, done)=> {
         if (docs) {
-          done(true, null);
+          return done(true, null);
         } else {
-          Categories.findByIdAndRemove(_id, (err, doc)=> {
+          Categories.findByIdAndRemove(category, (err, doc)=> {
             if (!doc) {
-              done(false, null);
+              return done(false, null);
             }
-            done(err, doc);
+            return done(err, doc);
           });
         }
       }
@@ -79,13 +80,13 @@ class CategoryController {
   }
 
   update(req, res, next) {
-    const _id = req.params.categoryId;
+    const categoryId = req.params.categoryId;
 
-    Categories.findByIdAndUpdate(_id, req.body, (err, category)=> {
+    Categories.findByIdAndUpdate(categoryId, req.body, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      if (!category) {
+      if (!doc) {
         return res.sendStatus(httpCode.NOT_FOUND);
       }
 

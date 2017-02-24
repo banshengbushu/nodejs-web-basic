@@ -3,10 +3,9 @@ const async = require('async');
 const httpCode = require('../config/httpCode');
 
 const loadUri = (items)=> {
-  const newItem = items.map(({item, count})=> {
+  return items.map(({item, count})=> {
     return {uri: `items/${item}`, count}
   });
-  return newItem;
 };
 
 class CartController {
@@ -14,6 +13,9 @@ class CartController {
     async.series({
       items: (done)=> {
         Carts.find({}, (err, docs)=> {
+          if (err) {
+            return done(err);
+          }
           let carts = docs.map((doc)=> {
             let cart = doc.toJSON();
             cart.items = loadUri(cart.items);
@@ -58,13 +60,13 @@ class CartController {
   }
 
   delete(req, res, next) {
-    const _id = req.params.cartId;
+    const cartId = req.params.cartId;
 
-    Carts.findByIdAndRemove(_id, (err, cart)=> {
+    Carts.findByIdAndRemove(cartId, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      if (!cart) {
+      if (!doc) {
         return res.sendStatus(httpCode.NOT_FOUND);
       }
       return res.sendStatus(httpCode.NO_CONTENT);
@@ -72,17 +74,17 @@ class CartController {
   }
 
   update(req, res, next) {
-    const _id = req.params.cartId;
+    const cartId = req.params.cartId;
 
-    Carts.findByIdAndUpdate(_id, req.body, (err, cart)=> {
+    Carts.findByIdAndUpdate(cartId, req.body, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      if (!cart) {
+      if (!doc) {
         return res.sendStatus(httpCode.NOT_FOUND);
       }
       return res.sendStatus(httpCode.NO_CONTENT);
-    })
+    });
   }
 }
 

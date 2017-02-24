@@ -6,10 +6,12 @@ const cartSchema = new Schema({
   items: [{
     count: Number,
     item: {
-      type: Schema.Types.ObjectId,
+      type: Schema.ObjectId,
       ref: 'Item'
     }
   }]
 });
 
-module.exports = mongoose.model("Cart", cartSchema);
+const Cart = mongoose.model("Cart", cartSchema);
+
+module.exports = Cart;

@@ -4,8 +4,13 @@ const config = require('config');
 const router = require('./router');
 const bodyParser = require('body-parser');
 
-mongoose.Promise = global.Promise;
-mongoose.connect(config.get('mongoUri'));
+mongoose.connect(config.get('mongoUri'), (err)=> {
+  if (err) {
+    console.log('connect error');
+  } else {
+    console.log('connect success');
+  }
+});
 
 const app = express();
 

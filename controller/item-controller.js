@@ -1,12 +1,14 @@
-const Items = require("../model/item");
-const httpCode = require('../config/httpCode');
 const async = require('async');
 
+const Items = require("../model/item");
+const httpCode = require('../config/httpCode');
 class ItemController {
   getAll(req, res, next) {
     async.series({
       items: (done)=> {
-        Items.find({}).populate('category').exec(done);
+        Items.find({})
+          .populate('category')
+          .exec(done);
       },
       totalCount: (done)=> {
         Items.count(done);
@@ -20,17 +22,19 @@ class ItemController {
   }
 
   getOne(req, res, next) {
-    const _id = req.params.itemId;
+    const itemId = req.params.itemId;
 
-    Items.findById(_id).populate('category').exec((err, item)=> {
-      if (err) {
-        return next(err)
-      }
-      if (!item) {
-        return res.status(httpCode.NOT_FOUND);
-      }
-      return res.status(httpCode.OK).send(item);
-    })
+    Items.findById(itemId)
+      .populate('category')
+      .exec((err, doc)=> {
+        if (err) {
+          return next(err)
+        }
+        if (!doc) {
+          return res.status(httpCode.NOT_FOUND);
+        }
+        return res.status(httpCode.OK).send(doc);
+      })
   }
 
   create(req, res, next) {
@@ -43,13 +47,13 @@ class ItemController {
   }
 
   delete(req, res, next) {
-    const _id = req.params.itemId;
+    const itemId = req.params.itemId;
 
-    Items.findByIdAndRemove(_id, (err, item)=> {
+    Items.findByIdAndRemove(itemId, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      if (!item) {
+      if (!doc) {
         return res.sendStatus(httpCode.NOT_FOUND);
       }
       return res.sendStatus(httpCode.NO_CONTENT);
@@ -57,12 +61,11 @@ class ItemController {
   }
 
   update(req, res, next) {
-    const _id = req.params.itemId;
-    Items.findByIdAndUpdate(_id, req.body, (err, item)=> {
+    Items.findByIdAndUpdate(req.params.itemId, req.body, (err, doc)=> {
       if (err) {
         return next(err);
       }
-      if (!item) {
+      if (!doc) {
         return res.sendStatus(httpCode.NOT_FOUND);
       }
 

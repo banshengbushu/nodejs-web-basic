@@ -7,11 +7,13 @@ const itemSchema = new Schema({
   name: String,
   price: String,
   category: {
-    type: Schema.Types.ObjectId,
+    type: Schema.ObjectId,
     ref: 'Category'
   }
 });
 
-module.exports = mongoose.model("Item", itemSchema);
+const Item = mongoose.model("Item", itemSchema);
+
+module.exports = Item;
 
 
